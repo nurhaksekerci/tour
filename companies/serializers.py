@@ -4,6 +4,8 @@ from .models import (
     Subscription, Usage, Payment, APIKey, APIUsage,
     Notification, AuditLog, Integration
 )
+import uuid
+from drf_yasg.utils import swagger_serializer_method
 
 class CurrencySerializer(serializers.ModelSerializer):
     """
@@ -114,19 +116,73 @@ class CompanyDetailSerializer(serializers.ModelSerializer):
     branches_count = serializers.SerializerMethodField()
     active_users_count = serializers.SerializerMethodField()
     storage_usage_gb = serializers.SerializerMethodField()
+    main_branch_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
         fields = '__all__'
+        read_only_fields = ('tenant_id',)
+        extra_kwargs = {
+            'tax_number': {'required': False, 'allow_blank': True}
+        }
 
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField())
+    def get_main_branch_id(self, obj):
+        # Eğer create sırasında oluşturulduysa
+        if hasattr(self, 'main_branch_id'):
+            return self.main_branch_id
+        # Mevcut instance için merkez şubeyi bul
+        main_branch = obj.branches.filter(name="Merkez").first()
+        return main_branch.id if main_branch else None
+
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField())
     def get_branches_count(self, obj):
         return obj.branches.count()
 
+    @swagger_serializer_method(serializer_or_field=serializers.IntegerField())
     def get_active_users_count(self, obj):
         return obj.users.filter(is_active=True).count()
 
+    @swagger_serializer_method(serializer_or_field=serializers.FloatField())
     def get_storage_usage_gb(self, obj):
         return round(obj.storage_usage / (1024 * 1024 * 1024), 2)
+
+    def create(self, validated_data):
+        """
+        Yeni bir şirket oluşturur ve otomatik olarak merkez şubesi oluşturur.
+        
+        İşlem sırası:
+        1. Benzersiz bir tenant_id oluşturulur
+        2. Şirket kaydı oluşturulur
+        3. Merkez şubesi oluşturulur:
+           - İsim: "Merkez"
+           - Email: merkez@[şirket-email-domain]
+           - Diğer bilgiler şirket bilgileriyle aynı
+           - Durum: active
+        """
+        # Tenant ID oluştur
+        validated_data['tenant_id'] = uuid.uuid4()
+        
+        # Şirketi oluştur
+        company = super().create(validated_data)
+        
+        # Merkez şubesi oluştur
+        main_branch = Branch.objects.create(
+            company=company,
+            name="Merkez",
+            email=f"merkez@{company.email.split('@')[1]}",  # Şirket email'inden domain kısmını al
+            phone=company.phone,
+            address=company.address,
+            city=company.city,
+            district=company.district,
+            neighborhood=company.neighborhood,
+            status='active'
+        )
+        
+        # Merkez şube ID'sini instance'a ekle
+        self.main_branch_id = main_branch.id
+        
+        return company
 
 class BranchListSerializer(serializers.ModelSerializer):
     company_name = serializers.CharField(source='company.name', read_only=True)

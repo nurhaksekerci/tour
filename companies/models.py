@@ -80,7 +80,7 @@ class Plan(models.Model):
 
 class Company(models.Model):
     name = models.CharField(_("Company Name"), max_length=255, unique=True)
-    tax_number = models.CharField(_("Tax Number"), max_length=20, unique=True)
+    tax_number = models.CharField(_("Tax Number"), max_length=20, unique=True, blank=True, null=True)
     address = models.TextField(_("Address"))
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')

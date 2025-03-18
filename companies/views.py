@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -31,7 +31,7 @@ from .permissions import (
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'code']
     filterset_fields = ['name', 'code']
@@ -39,7 +39,7 @@ class CityViewSet(viewsets.ModelViewSet):
 class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = DistrictSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'code', 'city__name']
     filterset_fields = ['city', 'name', 'code']
@@ -47,7 +47,7 @@ class DistrictViewSet(viewsets.ModelViewSet):
 class NeighborhoodViewSet(viewsets.ModelViewSet):
     queryset = Neighborhood.objects.all()
     serializer_class = NeighborhoodSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ['name', 'code', 'district__name']
     filterset_fields = ['district', 'name', 'code']

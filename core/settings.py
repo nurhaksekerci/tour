@@ -132,8 +132,6 @@ import os
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -184,8 +182,8 @@ SIMPLE_JWT = {
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 
 # CORS Settings
-CORS_ALLOW_ALL_ORIGINS = True  # Sadece geliştirme ortamında kullanın
-CORS_ALLOWED_ORIGINS = ["*"]
+CORS_ALLOW_ALL_ORIGINS = True 
+
 
 # Swagger Settings
 SWAGGER_SETTINGS = {

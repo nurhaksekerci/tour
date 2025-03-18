@@ -75,14 +75,14 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
     """
     Kullanıcı profili görüntüleme ve güncelleme endpoint'i.
     """
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
     permission_classes = (IsAuthenticated,)
 
     @swagger_auto_schema(
         operation_summary="Kullanıcı profili görüntüleme",
         operation_description="Mevcut kullanıcının profil bilgilerini görüntüleyin",
         responses={
-            200: UserSerializer,
+            200: UserProfileSerializer,
             401: "Kimlik doğrulama gerekli"
         }
     )
@@ -94,16 +94,16 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
         operation_summary="Kullanıcı profili güncelleme",
         operation_description="Mevcut kullanıcının profil bilgilerini güncelleyin",
         responses={
-            200: UserSerializer,
+            200: UserUpdateSerializer,
             400: "Geçersiz veri",
             401: "Kimlik doğrulama gerekli"
         }
     )
     def put(self, request, *args, **kwargs):
-        serializer = self.get_serializer(request.user, data=request.data, partial=True)
+        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(UserProfileSerializer(request.user).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(generics.UpdateAPIView):
