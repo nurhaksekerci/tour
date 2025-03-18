@@ -33,7 +33,7 @@ class BaseCompanyViewSet(viewsets.ModelViewSet):
     """
     permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-
+    pagination_class = None  # Sayfalama kapatıldı
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
@@ -121,7 +121,7 @@ class VehicleTypeViewSet(BaseCompanyViewSet):
     serializer_class = VehicleTypeSerializer
     search_fields = ['name']
     filterset_fields = ['is_active']
-
+    pagination_class = None  # Sayfalama kapatıldı
 class BuyerCompanyViewSet(BaseCompanyViewSet):
     """
     Alıcı şirketler için API endpoint'leri.
@@ -139,6 +139,8 @@ class TourViewSet(BaseCompanyViewSet):
     serializer_class = TourSerializer
     search_fields = ['name', 'start_city__name', 'end_city__name']
     filterset_fields = ['start_city', 'end_city', 'is_active']
+    pagination_class = None  # Sayfalama kapatıldı
+
 
 class NoVehicleTourViewSet(BaseCompanyViewSet):
     """
@@ -148,6 +150,8 @@ class NoVehicleTourViewSet(BaseCompanyViewSet):
     serializer_class = NoVehicleTourSerializer
     search_fields = ['name', 'city__name']
     filterset_fields = ['city', 'is_active']
+    pagination_class = None  # Sayfalama kapatıldı
+
 
 class TransferViewSet(BaseCompanyViewSet):
     """
@@ -157,6 +161,7 @@ class TransferViewSet(BaseCompanyViewSet):
     serializer_class = TransferSerializer
     search_fields = ['name', 'start_city__name', 'end_city__name']
     filterset_fields = ['start_city', 'end_city', 'is_active']
+    pagination_class = None
 
 class HotelViewSet(BaseCompanyViewSet):
     """
@@ -166,6 +171,7 @@ class HotelViewSet(BaseCompanyViewSet):
     serializer_class = HotelSerializer
     search_fields = ['name', 'city__name']
     filterset_fields = ['city', 'is_active']
+    pagination_class = None
 
     @swagger_auto_schema(
         operation_summary="Fiyat Geçmişi",
@@ -191,6 +197,7 @@ class MuseumViewSet(BaseCompanyViewSet):
     serializer_class = MuseumSerializer
     search_fields = ['name', 'city__name']
     filterset_fields = ['city', 'is_active']
+    pagination_class = None
 
     @swagger_auto_schema(
         operation_summary="Fiyat Geçmişi",
@@ -216,6 +223,7 @@ class ActivityViewSet(BaseCompanyViewSet):
     serializer_class = ActivitySerializer
     search_fields = ['name']
     filterset_fields = ['cities', 'is_active']
+    pagination_class = None
 
 class GuideViewSet(BaseCompanyViewSet):
     """
@@ -225,6 +233,7 @@ class GuideViewSet(BaseCompanyViewSet):
     serializer_class = GuideSerializer
     search_fields = ['name', 'phone', 'document_no']
     filterset_fields = ['cities', 'is_active']
+    pagination_class = None
 
 class VehicleSupplierViewSet(BaseCompanyViewSet):
     """
@@ -234,6 +243,7 @@ class VehicleSupplierViewSet(BaseCompanyViewSet):
     serializer_class = VehicleSupplierSerializer
     search_fields = ['name']
     filterset_fields = ['cities', 'is_active']
+    pagination_class = None
 
 class ActivitySupplierViewSet(BaseCompanyViewSet):
     """
@@ -243,6 +253,7 @@ class ActivitySupplierViewSet(BaseCompanyViewSet):
     serializer_class = ActivitySupplierSerializer
     search_fields = ['name']
     filterset_fields = ['cities', 'is_active']
+    pagination_class = None
 
 class VehicleCostViewSet(BaseCompanyViewSet):
     """
@@ -252,6 +263,7 @@ class VehicleCostViewSet(BaseCompanyViewSet):
     serializer_class = VehicleCostSerializer
     search_fields = ['supplier__name']
     filterset_fields = ['supplier', 'tour', 'transfer', 'is_active']
+    pagination_class = None
 
     @swagger_auto_schema(
         operation_summary="Fiyat Geçmişi",
@@ -311,6 +323,7 @@ class ActivityCostViewSet(BaseCompanyViewSet):
     serializer_class = ActivityCostSerializer
     search_fields = ['activity__name', 'supplier__name']
     filterset_fields = ['activity', 'supplier', 'is_active']
+    pagination_class = None
 
     @swagger_auto_schema(
         operation_summary="Fiyat Geçmişi",
@@ -369,6 +382,7 @@ class HotelPriceHistoryViewSet(BaseCompanyViewSet):
     queryset = HotelPriceHistory.objects.all()
     serializer_class = HotelPriceHistorySerializer
     filterset_fields = ['hotel', 'currency', 'is_active']
+    pagination_class = None
 
 class MuseumPriceHistoryViewSet(BaseCompanyViewSet):
     """
@@ -377,6 +391,7 @@ class MuseumPriceHistoryViewSet(BaseCompanyViewSet):
     queryset = MuseumPriceHistory.objects.all()
     serializer_class = MuseumPriceHistorySerializer
     filterset_fields = ['museum', 'currency', 'is_active']
+    pagination_class = None
 
 class VehicleCostHistoryViewSet(BaseCompanyViewSet):
     """
@@ -385,6 +400,7 @@ class VehicleCostHistoryViewSet(BaseCompanyViewSet):
     queryset = VehicleCostHistory.objects.all()
     serializer_class = VehicleCostHistorySerializer
     filterset_fields = ['vehicle_cost', 'currency', 'is_active']
+    pagination_class = None
 
 class ActivityCostHistoryViewSet(BaseCompanyViewSet):
     """
@@ -393,3 +409,4 @@ class ActivityCostHistoryViewSet(BaseCompanyViewSet):
     queryset = ActivityCostHistory.objects.all()
     serializer_class = ActivityCostHistorySerializer
     filterset_fields = ['activity_cost', 'currency', 'is_active']
+    pagination_class = None

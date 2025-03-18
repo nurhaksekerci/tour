@@ -39,27 +39,7 @@ class PlanAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('price',)
 
-@admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'tax_number', 'email', 'phone', 'city', 'current_plan', 'is_active')
-    list_filter = ('is_active', 'current_plan', 'city')
-    search_fields = ('name', 'tax_number', 'email', 'phone')
-    ordering = ('name',)
-    readonly_fields = ('created_at', 'updated_at')
-    fieldsets = (
-        (_('Temel Bilgiler'), {
-            'fields': ('name', 'tax_number', 'tax_office', 'logo')
-        }),
-        (_('İletişim Bilgileri'), {
-            'fields': ('email', 'phone', 'address', 'city', 'district', 'neighborhood')
-        }),
-        (_('Plan Bilgileri'), {
-            'fields': ('current_plan', 'is_active', 'storage_limit', 'storage_usage')
-        }),
-        (_('Sistem Bilgileri'), {
-            'fields': ('created_at', 'updated_at')
-        }),
-    )
+admin.site.register(Company)
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
